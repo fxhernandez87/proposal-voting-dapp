@@ -5,7 +5,8 @@ contract VotingProposal {
   // Proposal Structure
   struct Proposal {
     string text;
-    int totalVotes;
+    uint positiveVotes;
+    uint negativeVotes;
   }
 
   // Defining proposal
@@ -19,7 +20,7 @@ contract VotingProposal {
   uint public votersCount;
 
   constructor() public {
-    proposal = Proposal("This is my first Proposal example", 0);
+    proposal = Proposal("This is my first Proposal example", 0, 0);
   }
 
 }
