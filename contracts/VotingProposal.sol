@@ -23,4 +23,73 @@ contract VotingProposal {
     proposal = Proposal("This is my first Proposal example", 0, 0);
   }
 
+  // Just for debugging purposes
+  event LogString(string _str);
+  event LogUInt(uint _int);
+
+  modifier canVote {
+    require(!hasVoted(), "cannot vote twice");
+    _;
+  }
+
+  modifier costs(uint _amount) {
+    require(msg.value >= _amount, "Insufficient funds to vote");
+
+    _;
+
+    if (msg.value > _amount)
+      msg.sender.transfer(msg.value - _amount);
+  }
+
+
+  event VoteReceived(
+    address indexed _from,
+    int8 _vote,
+    int _totalVotes
+  );
+
+  function hasVoted () public view returns (bool) {
+    return voters[msg.sender] != 0;
+  }
+
+  /*
+   * An account cannot vote twice and must send 0.01 ether to be allowed to vote
+   */
+  function upVote()
+    public
+    payable
+    canVote
+    costs(0.01 ether)
+  {
+    int8 _vote = 1;
+    votersCount++;
+    voters[msg.sender] = _vote;
+    proposal.positiveVotes++;
+    emit VoteReceived(msg.sender, _vote, getProposalTotalCount());
+  }
+
+  /*
+   * An account cannot vote twice and must send 0.01 ether to be allowed to vote
+   */
+  function downVote()
+    public
+    payable
+    canVote
+    costs(0.01 ether)
+  {
+    int8 _vote = -1;
+    votersCount++;
+    voters[msg.sender] = _vote;
+    proposal.negativeVotes++;
+    emit VoteReceived(msg.sender, _vote, getProposalTotalCount());
+  }
+
+  function getVote() public view returns (int8) {
+    require(hasVoted(), "Account hasn't voted");
+    return voters[msg.sender];
+  }
+
+  function getProposalTotalCount() public view returns (int) {
+    return int(proposal.positiveVotes - proposal.negativeVotes);
+  }
 }
