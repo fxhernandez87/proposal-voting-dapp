@@ -23,10 +23,6 @@ contract VotingProposal {
     proposal = Proposal("This is my first Proposal example", 0, 0);
   }
 
-  // Just for debugging purposes
-  event LogString(string _str);
-  event LogUInt(uint _int);
-
   modifier canVote {
     require(!hasVoted(), "cannot vote twice");
     _;
@@ -41,6 +37,9 @@ contract VotingProposal {
       msg.sender.transfer(msg.value - _amount);
   }
 
+  // Just for debugging purposes
+  event LogString(string _str);
+  event LogUInt(uint _int);
 
   event VoteReceived(
     address indexed _from,
