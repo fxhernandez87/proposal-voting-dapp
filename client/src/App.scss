@@ -1,0 +1,164 @@
+.App {
+  text-align: center;
+  background-image: linear-gradient(#FFFFFF, #E8E8E8);
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 60% 40%;
+  grid-template-rows: 5vh 95vh;
+  grid-template-areas:
+          "header header"
+          "content feed";
+}
+
+.App-header {
+  background-color: #1E7085;
+  grid-area: header;
+  //min-height: 5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+
+  .content {
+    width: 80vw;
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    p {
+      font-size: 18px;
+      margin: 0 12px;
+    }
+  }
+}
+
+.App-content {
+  grid-area: content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+  font-family: Open Sans, Light;
+
+  .content {
+    width: 100%;
+    padding-left: 17%;
+    padding-right: 5%;
+    height: 90%;
+
+    h3 {
+      font-size: 42px;
+      color: #333333;
+      margin: 16px 0;
+    }
+
+    .rating {
+      height: 30px;
+      margin-bottom: 28px;
+    }
+
+    .proposal {
+      height: 30vh;
+      font-size: 18px;
+      line-height: 21.6px;
+      display: inline-block;
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
+
+      div {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        margin-right: 100px;
+
+        p {
+          margin: 0 15px;
+          font-size: 18px;
+          font-family: Open Sans, Regular;
+        }
+
+        &.active {
+          img {
+            width: 75px;
+          }
+
+          &.neg {
+            p {
+              color: #CF5F64;
+              font-weight: bold;
+            }
+          }
+
+          &.pos {
+            p {
+              color: #7AC943;
+              font-weight: bold;
+            }
+          }
+        }
+
+        &:not(active) {
+          p {
+            color: #afafaf;
+            font-weight: bold;
+          }
+        }
+
+        &.no-vote {
+
+          button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+          }
+
+          p {
+            color: #4D4D4D;
+          }
+        }
+
+
+      }
+    }
+  }
+}
+
+.App-feed {
+  grid-area: feed;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+
+  .content {
+    width: 90%;
+    height: 60%;
+    margin-top: 14px;
+    overflow-y: hidden;
+
+    .notification {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      height: 24px;
+      margin: 15px 0;
+
+
+      p {
+        display: inline-block;
+        width: 50%;
+        margin: 0;
+        padding: 0 15px;
+        font-size: 18px;
+      }
+    }
+
+  }
+}
