@@ -9,36 +9,50 @@ import VoteIcon from './VoteIcon';
 
 export default ({ web3 }) => {
 
-  const [signedInAddress, contract] = useAuth(web3);
+  const [authError, signedInAddress, contract] = useAuth(web3);
   const context = useContext(VotingContext);
 
   const getMyVote = async () => {
 
     if (contract && signedInAddress) {
-      const hasVoted = await contract.methods.hasVoted.call({ from: signedInAddress });
-      const myVote = hasVoted ? await contract.methods.getVote.call({ from: signedInAddress }) : 0;
+      try {
+        const hasVoted = await contract.methods.hasVoted.call({from: signedInAddress});
+        const myVote = hasVoted ? await contract.methods.getVote.call({from: signedInAddress}) : 0;
 
-      context.setVoter({
-        hasVoted,
-        vote: myVote,
-        address: signedInAddress
-      });
+        context.setVoter({
+          hasVoted,
+          vote: myVote,
+          address: signedInAddress
+        });
+      } catch (err) {
+        context.setError(err);
+      }
     }
   };
 
   useEffect(() => {
     getMyVote();
-  }, [contract, signedInAddress]);
+    if (authError) {
+      context.setError(authError);
+    }
+  }, [contract, signedInAddress, authError]);
 
   const upVoteProposal = async () => {
-    await contract.methods.upVote.send({ from: context.voter.address, value: web3.utils.toWei("0.01", "ether")});
+    try {
+      await contract.methods.upVote.send({ from: context.voter.address, value: web3.utils.toWei("0.01", "ether")});
+    } catch (err) {
+      context.setError(err);
+    }
   };
 
   const downVoteProposal = async () => {
-    await contract.methods.downVote.send({ from: context.voter.address, value: web3.utils.toWei("0.01", "ether")});
+    try {
+      await contract.methods.downVote.send({ from: context.voter.address, value: web3.utils.toWei("0.01", "ether")});
+    } catch (err) {
+      context.setError(err);
+    }
   };
   const { proposal: {positiveVotes, negativeVotes}, voter: {hasVoted, vote} } = context;
-
   return typeof hasVoted !== "undefined" && (
     <div className="buttons">
       <VoteIcon

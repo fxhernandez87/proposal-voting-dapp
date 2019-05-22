@@ -1,7 +1,9 @@
 import update from 'immutability-helper';
+
 export const ADD_MESSAGE = 'ADD_MESSAGE';
 export const SET_PROPOSAL = 'SET_PROPOSAL';
 export const SET_VOTER = 'SET_VOTER';
+export const SET_ERROR = 'SET_ERROR';
 
 const addMessageToFeed = (message, state) => {
   const voteProperty = message._vote === 1 ? "positiveVotes" : "negativeVotes";
@@ -34,6 +36,11 @@ const setVotingInfo = (payload, state) => {
     }
   })
 };
+const setError = (payload, state) => {
+  return update(state, {
+    error: { $set: payload }
+  })
+};
 
 export const voteReducer = (state, action) => {
   switch (action.type) {
@@ -43,6 +50,8 @@ export const voteReducer = (state, action) => {
       return setProposalInfo(action.proposal, state);
     case SET_VOTER:
       return setVotingInfo(action.voter, state);
+    case SET_ERROR:
+      return setError(action.error, state);
     default:
       return state;
   }

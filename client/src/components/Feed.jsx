@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import ThumbsUp from '../assets/ThumbsUp.svg';
 import ThumbsDown from '../assets/ThumbsDown.svg';
 
@@ -7,7 +7,6 @@ import VotingContext from '../contexts/votingProposal';
 export default ({ contract }) => {
   const context = useContext(VotingContext);
   const { voter: {address}, messages } = context;
-  const [error, setError] = useState(null);
 
   const subscribeToVoteEvents = async () => {
     contract.events.VoteReceived({fromBlock: 'latest', toBlock: 'latest'}).on('data', result => {
@@ -21,7 +20,7 @@ export default ({ contract }) => {
         });
       }
     }).on('error', err => {
-        setError(err);
+      context.setError(err);
     });
   };
 
@@ -43,10 +42,6 @@ export default ({ contract }) => {
       </div>
     );
   });
-
-  if (error) {
-    return <div>Error...</div>;
-  }
 
   return (
     <div className="proposal-info">

@@ -7,12 +7,16 @@ export default ({ contract }) => {
   const context = useContext(VotingContext);
 
   const fetchProposalInfo = async () => {
-    const proposal = await contract.methods.proposal.call();
-    context.setProposal({
-      text: proposal.text,
-      positiveVotes: proposal.positiveVotes.toNumber(),
-      negativeVotes: proposal.negativeVotes.toNumber(),
-    });
+    try {
+      const proposal = await contract.methods.proposal.call();
+      context.setProposal({
+        text: proposal.text,
+        positiveVotes: proposal.positiveVotes.toNumber(),
+        negativeVotes: proposal.negativeVotes.toNumber(),
+      });
+    } catch (error) {
+      context.setError(error);
+    }
   };
 
   useEffect(() => {
@@ -26,7 +30,7 @@ export default ({ contract }) => {
   const rating = totalVotes ? (positiveVotes * 5) / totalVotes : 0;
   return (
     <div>
-      <h3>Proposal Ballot</h3>
+      <h3>Remake Game of Thrones Season 8 with competent writers.</h3>
       <div className="rating">
         <StarRatings
           rating={rating}
@@ -38,11 +42,13 @@ export default ({ contract }) => {
         />
       </div>
       <p className="proposal">
-        Proponemos que los consumidores, los productores, los comerciantes y supermercados, las universidades, asociaciones civiles, y el Estado coordinemos acciones para terminar de una vez por todas con el flagelo del trabajo infantil en el campo, y ocuparnos luego de erradicarlo también de cada ámbito.
+        David Benioff and D.B. Weiss have proven themselves to be woefully incompetent writers when they have no source material (i.e. the books) to fall back on.
         <br />
-        Los responsables de controlar y generar políticas públicas que terminen con esta violación a los Derechos del Niño, no lo hacen y solo hablan de estadísticas. Estamos trabajando para no encontrar nunca más a un niño haciendo malabares, pidiendo comida o monedas en las calles, trabajando en los campos rodeados de agrotóxicos, herramientas filosas y accidentes fatales.
         <br />
-        Fernando (13) Lucas (14) y Edgard (17) viajaban junto a otros 14 niños en un camión destartalado rumbo al Yerbal en Misiones. El camión desbarrancó y estos tres chicos perdieron la vida, pasando a formar parte de una estadística, seguro poco confiable. Lo que no cuentan las estadísticas lo narran los sobrevivientes: el papá de Fernando, Francisco Piñeiro, cuando se dio cuenta de que la caída era inevitable abrazó a su hijo Fernando poniendo su propio cuerpo como barrera. Nada pudo hacer y fallecieron los dos en el acto.
+        This series deserves a final season that makes sense.
+        <br />
+        <br />
+        Subvert my expectations and make it happen, HBO!
       </p>
     </div>
   );

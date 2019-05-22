@@ -9,4 +9,5 @@ export default React.createContext({
   },
   messages: [],
   voter: {},
+  error: null,
 });

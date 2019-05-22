@@ -13,18 +13,17 @@ import "./App.scss";
 const App = () => {
 
   const [error, web3] = useWeb3();
-  const [userLoggedIn, contract] = useAuth(web3);
-  if (!web3 && !error) {
-    return <div>Loading Web3, accounts, and contract...</div>;
-  }
+  const [authError, userLoggedIn, contract] = useAuth(web3);
+  const finalError = error || authError;
 
-  if (!web3 &&    error) {
-    return <div>Error...</div>;
-  }
-
+  const initializing = !web3 && !finalError;
   return (
     <GlobalState>
-      <BackDropLoading active={!userLoggedIn}>
+      <BackDropLoading
+        active={!userLoggedIn}
+        initializing={initializing}
+        error={!web3 && finalError}
+      >
         <div className="App">
           <Header userLoggedIn={userLoggedIn} />
           <div className="App-content">
