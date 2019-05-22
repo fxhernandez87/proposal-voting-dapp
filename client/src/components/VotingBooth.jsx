@@ -1,13 +1,14 @@
 import React, {useContext, useEffect} from 'react';
+import PropTypes from "prop-types";
 import ThumbsUp from '../assets/ThumbsUp.svg';
 import ThumbsDown from '../assets/ThumbsDown.svg';
 import ThumbDisabled from '../assets/ThumbDisabled.svg';
 import ThumbDisabledDown from '../assets/ThumbDisabledDown.svg';
 import VotingContext from "../contexts/votingProposal";
-import {useAuth} from "../hooks/auth";
+import { useAuth } from "../hooks/customHooks";
 import VoteIcon from './VoteIcon';
 
-export default ({ web3 }) => {
+const VotingBooth = ({ web3 }) => {
 
   const [authError, signedInAddress, contract] = useAuth(web3);
   const context = useContext(VotingContext);
@@ -75,4 +76,14 @@ export default ({ web3 }) => {
       />
     </div>
   );
-}
+};
+
+VotingBooth.propTypes = {
+  web3: PropTypes.shape()
+};
+
+VotingBooth.defaultProps = {
+  web3: null
+};
+
+export default VotingBooth;

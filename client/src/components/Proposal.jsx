@@ -1,8 +1,9 @@
 import React, { useEffect, useContext } from 'react';
+import PropTypes from "prop-types";
 import StarRatings from 'react-star-ratings';
 import VotingContext from '../contexts/votingProposal';
 
-export default ({ contract }) => {
+const Proposal = ({ contract }) => {
 
   const context = useContext(VotingContext);
 
@@ -52,4 +53,15 @@ export default ({ contract }) => {
       </p>
     </div>
   );
-}
+};
+
+
+Proposal.propTypes = {
+  contract: PropTypes.shape(),
+};
+
+Proposal.defaultProps = {
+  contract: null
+};
+
+export default Proposal;

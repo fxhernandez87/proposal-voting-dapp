@@ -1,9 +1,10 @@
 /* eslint-disable no-nested-ternary,react/destructuring-assignment */
 import React, { useContext, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import LoadingOverlay from 'react-loading-overlay';
 import VotingContext from "../contexts/votingProposal";
 
-export default ({ active, children, initializing, error }) => {
+const BackDropLoading = ({ active, children, initializing, error }) => {
 
   const context = useContext(VotingContext);
   const [isActive, setIsActive] = useState(true);
@@ -29,4 +30,17 @@ export default ({ active, children, initializing, error }) => {
       {children}
     </LoadingOverlay>
   );
-}
+};
+
+BackDropLoading.propTypes = {
+  active: PropTypes.bool.isRequired,
+  initializing: PropTypes.bool.isRequired,
+  error: PropTypes.oneOfType([PropTypes.shape(), PropTypes.bool]),
+  children: PropTypes.node.isRequired,
+};
+
+BackDropLoading.defaultProps = {
+  error: null
+};
+
+export default BackDropLoading;

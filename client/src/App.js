@@ -1,7 +1,6 @@
 import React from "react";
 import GlobalState from './contexts/GlobalState';
-import { useWeb3 } from './hooks/web3';
-import { useAuth } from "./hooks/auth";
+import { useWeb3, useAuth } from './hooks/customHooks';
 import Proposal from './components/Proposal';
 import VotingBooth from './components/VotingBooth';
 import Feed from './components/Feed';

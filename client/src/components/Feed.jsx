@@ -1,10 +1,11 @@
 import React, { useEffect, useContext } from 'react';
+import PropTypes from "prop-types";
 import ThumbsUp from '../assets/ThumbsUp.svg';
 import ThumbsDown from '../assets/ThumbsDown.svg';
 
 import VotingContext from '../contexts/votingProposal';
 
-export default ({ contract }) => {
+const Feed = ({ contract }) => {
   const context = useContext(VotingContext);
   const { voter: {address}, messages } = context;
 
@@ -48,4 +49,14 @@ export default ({ contract }) => {
       {messagesStack}
     </div>
   );
-}
+};
+
+Feed.propTypes = {
+  contract: PropTypes.shape(),
+};
+
+Feed.defaultProps = {
+  contract: null
+};
+
+export default Feed;
