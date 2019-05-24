@@ -54,7 +54,7 @@ export const useWeb3 = () => {
       const { web3 } = window;
       setWeb3Instance(web3);
     } else {
-      const provider = Web3.providers.WebsocketProvider("ws://127.0.0.1:7545");
+      const provider = Web3.providers.WebsocketProvider(process.env.REACT_APP_LOCAL_BLOCK_CHAIN_WS);
       const web3 = new Web3(provider);
       setWeb3Instance(web3);
     }
