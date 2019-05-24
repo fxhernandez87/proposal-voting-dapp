@@ -38,9 +38,9 @@ Clone this repository:
     - Client -
     ---------- 
     1) cd client
-    2) yarn install
+    2) npm install
     3) copy ".env.example" and rename it as ".env"
-    4) yarn start
+    4) npm start
 ```
 
 ## Configuration
@@ -54,7 +54,7 @@ with ```truffle-config.js``` you can modify where the contracts (formatted as JS
     - ```truffle test```
 - ```React```
     - cd proposal-voting-dapp/client
-    - ```yarn test```
+    - ```npm test```
 
 ## API
 
