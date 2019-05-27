@@ -13,7 +13,16 @@ const BackDropLoading = ({ active, children, initializing, error }) => {
     setIsActive(active || !!error || !!context.error);
   }, [active, error, context.error]);
 
-  const content = context.error ? context.error.message : initializing ? "Initializing App" : "Fetching User";
+  // this is a little bit messy, basically the content of the overlay will be, if there is an error,
+  // that error message, if the app is initializing, will be Initializing App otherwise will be Fetching User
+  const content = context.error
+    ? context.error.message
+    : error
+      ? error.message
+      : initializing
+        ? "Initializing App"
+        : "Fetching User";
+
   const handleClick = () => {
     setIsActive(false);
     if (context.error) {
