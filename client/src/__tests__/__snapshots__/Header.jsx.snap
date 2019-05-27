@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render a header with a title 1`] = `
+<DocumentFragment>
+  <div
+    class="App-header"
+  >
+    <div
+      class="content"
+    >
+      <img
+        alt="user-logo"
+        src="User.svg"
+        width="40"
+      />
+      <p>
+        hello
+      </p>
+    </div>
+  </div>
+</DocumentFragment>
+`;
