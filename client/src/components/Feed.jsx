@@ -18,7 +18,8 @@ const Feed = ({ contract }) => {
 
   const subscribeToVoteEvents = async (contract, address) => {
     if (contract && address) {
-      setEventEmit(contract.events.VoteReceived({fromBlock: '0', toBlock: 'latest'}));
+      // might want to change this get only new events or the whole package
+      setEventEmit(contract.events.VoteReceived({fromBlock: 'latest', toBlock: 'latest'}));
     }
   };
 
