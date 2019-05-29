@@ -40,7 +40,7 @@ const VotingBooth = ({ web3 }) => {
 
   const upVoteProposal = async () => {
     try {
-      await contract.methods.upVote.send({ from: context.voter.address, value: web3.utils.toWei("0.01", "ether")});
+      await contract.methods.vote(1).send({ from: context.voter.address, value: web3.utils.toWei("0.01", "ether")});
     } catch (err) {
       context.setError(err);
     }
@@ -48,7 +48,7 @@ const VotingBooth = ({ web3 }) => {
 
   const downVoteProposal = async () => {
     try {
-      await contract.methods.downVote.send({ from: context.voter.address, value: web3.utils.toWei("0.01", "ether")});
+      await contract.methods.vote(-1).send({ from: context.voter.address, value: web3.utils.toWei("0.01", "ether")});
     } catch (err) {
       context.setError(err);
     }
