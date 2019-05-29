@@ -15,8 +15,8 @@ contract("VotingProposal", accounts => {
       assert.equal(proposal[2], 0, "Initial vote count must be 0");
     });
 
-    it("should start with 0 voters", async () => {
-      const votersCount = await this.instance.votersCount();
+      it("should start with 0 voters", async () => {
+      const votersCount = await this.instance.getVotersCount();
       assert.equal(votersCount, 0);
     });
   });
@@ -24,14 +24,14 @@ contract("VotingProposal", accounts => {
   describe("Voting functions", () => {
 
     beforeEach("getting data before modifying the state", async () => {
-      this.votersCountBefore = await this.instance.votersCount.call();
+      this.votersCountBefore = await this.instance.getVotersCount.call();
       this.proposalBefore = await this.instance.proposal.call();
     });
 
     it("should add a new voter with its positive vote", async () => {
-      await this.instance.upVote({ from: accounts[0], value: web3.utils.toWei("0.01", "ether") });
+      await this.instance.vote(1, { from: accounts[0], value: web3.utils.toWei("0.01", "ether") });
 
-      const votersCount = await this.instance.votersCount.call();
+      const votersCount = await this.instance.getVotersCount.call();
 
       assert.equal(votersCount, this.votersCountBefore.toNumber() + 1);
 
@@ -42,9 +42,9 @@ contract("VotingProposal", accounts => {
 
     it("should add a new voter with its negative vote", async () => {
 
-      await this.instance.downVote({ from: accounts[1], value: web3.utils.toWei("0.01", "ether") });
+      await this.instance.vote(-1, { from: accounts[1], value: web3.utils.toWei("0.01", "ether") });
 
-      const votersCount = await this.instance.votersCount.call();
+      const votersCount = await this.instance.getVotersCount.call();
 
       assert.equal(votersCount, this.votersCountBefore.toNumber() + 1);
 
@@ -59,7 +59,7 @@ contract("VotingProposal", accounts => {
     });
 
     it("should return a voter vote value", async () => {
-      await this.instance.downVote({ from: accounts[3], value: web3.utils.toWei("0.01", "ether") });
+      await this.instance.vote(-1, { from: accounts[3], value: web3.utils.toWei("0.01", "ether") });
 
       const accountVote = await this.instance.getVote.call({ from: accounts[3] });
 
@@ -68,8 +68,8 @@ contract("VotingProposal", accounts => {
 
     it("should catch a voter is trying to vote again", async () => {
       try {
-        await this.instance.downVote({from: accounts[4], value: web3.utils.toWei("0.01", "ether")});
-        await this.instance.upVote({from: accounts[4], value: web3.utils.toWei("0.01", "ether")});
+        await this.instance.vote(-1, {from: accounts[4], value: web3.utils.toWei("0.01", "ether")});
+        await this.instance.vote(1, {from: accounts[4], value: web3.utils.toWei("0.01", "ether")});
         assert.fail("shouldn't have reached this far");
       } catch (err) {
         assert.notInclude(err.message, "shouldn't have reached this far");
@@ -79,7 +79,7 @@ contract("VotingProposal", accounts => {
 
     it("should catch a voter didn't send enough ether", async () => {
       try {
-        await this.instance.downVote({from: accounts[5], value: web3.utils.toWei("0.001", "ether")});
+        await this.instance.vote(-1, {from: accounts[5], value: web3.utils.toWei("0.001", "ether")});
         assert.fail("shouldn't have reached this far");
       } catch (err) {
         assert.notInclude(err.message, "shouldn't have reached this far");
@@ -90,7 +90,7 @@ contract("VotingProposal", accounts => {
 
     it("should catch a voter didn't send any ether", async () => {
       try {
-        await this.instance.downVote({from: accounts[5]});
+        await this.instance.vote(-1, {from: accounts[5]});
         assert.fail("shouldn't have reached this far");
       } catch (err) {
         assert.notInclude(err.message, "shouldn't have reached this far");
@@ -108,16 +108,16 @@ contract("Proposal functions", function(accounts) {
   });
 
   beforeEach("getting data before modifying the state", async () => {
-    this.votersCountBefore = await this.instance.votersCount.call();
+    this.votersCountBefore = await this.instance.getVotersCount.call();
     this.proposalBefore = await this.instance.proposal.call();
   });
 
   it("should return proposal totalVotes", async () => {
     await Promise.all([
-      this.instance.upVote({from: accounts[0], value: web3.utils.toWei("0.01", "ether")}), // + 1
-      this.instance.upVote({from: accounts[1], value: web3.utils.toWei("0.01", "ether")}), // + 1
-      this.instance.upVote({from: accounts[2], value: web3.utils.toWei("0.01", "ether")}), // + 1
-      this.instance.downVote({from: accounts[3], value: web3.utils.toWei("0.01", "ether")})// - 1
+      this.instance.vote(1, {from: accounts[0], value: web3.utils.toWei("0.01", "ether")}), // + 1
+      this.instance.vote(1, {from: accounts[1], value: web3.utils.toWei("0.01", "ether")}), // + 1
+      this.instance.vote(1, {from: accounts[2], value: web3.utils.toWei("0.01", "ether")}), // + 1
+      this.instance.vote(-1, {from: accounts[3], value: web3.utils.toWei("0.01", "ether")})// - 1
     ]);
 
     const totalVotes = await this.instance.getProposalTotalCount();
@@ -125,16 +125,16 @@ contract("Proposal functions", function(accounts) {
   });
 
   it("should increase proposal positiveVotes", async () => {
-    await this.instance.upVote({from: accounts[4], value: web3.utils.toWei("0.01", "ether")});
-    await this.instance.upVote({from: accounts[5], value: web3.utils.toWei("0.01", "ether")});
+    await this.instance.vote(1, {from: accounts[4], value: web3.utils.toWei("0.01", "ether")});
+    await this.instance.vote(1, {from: accounts[5], value: web3.utils.toWei("0.01", "ether")});
 
     const proposal = await this.instance.proposal.call();
     assert.equal(proposal[1].toNumber(), this.proposalBefore[1].toNumber() + 2);
   });
 
   it("should increase proposal negativeVotes", async () => {
-    await this.instance.downVote({from: accounts[6], value: web3.utils.toWei("0.01", "ether")});
-    await this.instance.upVote({from: accounts[7], value: web3.utils.toWei("0.01", "ether")});
+    await this.instance.vote(-1, {from: accounts[6], value: web3.utils.toWei("0.01", "ether")});
+    await this.instance.vote(1, {from: accounts[7], value: web3.utils.toWei("0.01", "ether")});
 
     const proposal = await this.instance.proposal.call();
     assert.equal(proposal[2].toNumber(), this.proposalBefore[2].toNumber() + 1);
@@ -146,7 +146,7 @@ contract("Voting event", (accounts) => {
   it("should handle a voting event", async () => {
     const instance = await VotingProposal.deployed();
 
-    const result = await instance.downVote({from: accounts[6], value: web3.utils.toWei("0.01", "ether")});
+    const result = await instance.vote(-1, {from: accounts[6], value: web3.utils.toWei("0.01", "ether")});
     /* Filter correct event types */
     const events = result.logs.filter(log => log.event === "VoteReceived");
 

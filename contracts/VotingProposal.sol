@@ -16,9 +16,6 @@ contract VotingProposal {
   // values could be a struct of Voter but to keep it simple, we just going to save the vote (1, -1);
   mapping(address => int8) public voters;
 
-  // number of addresses that voted
-  uint public votersCount;
-
   constructor() public {
     proposal = Proposal("This is my first Proposal example", 0, 0);
   }
@@ -54,32 +51,20 @@ contract VotingProposal {
   /*
    * An account cannot vote twice and must send 0.01 ether to be allowed to vote
    */
-  function upVote()
+  function vote(int8 _vote)
     public
     payable
     canVote
     costs(0.01 ether)
   {
-    int8 _vote = 1;
-    votersCount++;
+    require(_vote == 1 || _vote == -1);
     voters[msg.sender] = _vote;
-    proposal.positiveVotes++;
-    emit VoteReceived(msg.sender, _vote, getProposalTotalCount());
-  }
 
-  /*
-   * An account cannot vote twice and must send 0.01 ether to be allowed to vote
-   */
-  function downVote()
-    public
-    payable
-    canVote
-    costs(0.01 ether)
-  {
-    int8 _vote = -1;
-    votersCount++;
-    voters[msg.sender] = _vote;
-    proposal.negativeVotes++;
+    if (_vote == 1) {
+        proposal.positiveVotes++;
+    } else {
+        proposal.negativeVotes++;
+    }
     emit VoteReceived(msg.sender, _vote, getProposalTotalCount());
   }
 
@@ -90,5 +75,9 @@ contract VotingProposal {
 
   function getProposalTotalCount() public view returns (int) {
     return int(proposal.positiveVotes - proposal.negativeVotes);
+  }
+
+  function getVotersCount() public view returns (uint) {
+      return proposal.positiveVotes + proposal.negativeVotes;
   }
 }
